@@ -1,0 +1,112 @@
+@use '../../assets/Style/Style.scss' as *;
+
+.message-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: $white;
+  position: relative;
+  // padding: .4em .8em;
+  gap: .5em;
+
+  .head {
+    display: flex;
+    padding: .5em 1em;
+    border-bottom: .1em solid $black;
+    align-items: center;
+    gap: .5em;
+
+    .pdp {
+      width: 2.5em;
+      height: 2.5em;
+      border: .1em solid black;
+      border-radius: 100%;
+    }
+
+    .detail {
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        text-transform: capitalize;
+        color: $black;
+      }
+
+      .status {
+        width: .5em;
+        height: .5em;
+        background-color: $status;
+        border-radius: 100%;
+      }
+
+      .online {
+        background-color: $status;
+      }
+
+      .offline {
+        background-color: #f53578;
+      }
+    }
+  }
+
+  .message-containe {
+    display: flex;
+    flex-direction: column;
+    gap: .5em;
+    overflow: auto;
+    height: 80%;
+    padding: .5em 1em;
+
+    // .send {
+    //   background-color: $mostly;
+    //   color: $white;
+    //   align-self: flex-start;
+    //   padding: .5em 1em;
+    //   border-radius: 1em;
+    // }
+
+    // .receive {
+    //   background-color: $black;
+    //   color: $white;
+    //   align-self: flex-end;
+    //   padding: .5em 1em;
+    //   border-radius: 1em;
+    // }
+  }
+
+  .grab {
+    display: flex;
+    position: absolute;
+    bottom: .4em;
+    width: 98%;
+    gap: .3em;
+
+    textarea {
+      flex: 1;
+      padding: .5em 1em;
+      outline: none;
+      border-radius: .5em;
+    }
+
+    button {
+      background-color: $mostly;
+      padding: .5em 1em;
+      border: none;
+      color: $white;
+      border-radius: .5em;
+      width: 10%;
+    }
+  }
+}
+
+.message-no-select {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: $white;
+  position: relative;
+  padding: .4em .8em;
+  gap: .5em;
+  align-items: center;
+  justify-content: center;
+}
