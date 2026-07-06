@@ -1,10 +1,15 @@
 <template>
   <div v-if="conversation.id !== ''" class="message-panel">
-    <div class="head">
-      <div class="pdp"></div>
-      <div class="detail">
-        <div class="name">{{ conversation.name }}</div>
-        <!-- <div class="status" :class="status?.status ? 'online' : 'offline'"></div> -->
+    <div class="head justify-between">
+      <div class="flex">
+        <div class="pdp"></div>
+        <div class="detail">
+          <div class="name">{{ conversation.name }}</div>
+          <!-- <div class="status" :class="status?.status ? 'online' : 'offline'"></div> -->
+        </div>
+      </div>
+      <div class="flex">
+        Se deconecter
       </div>
     </div>
     <div class="message-containe">
@@ -67,8 +72,8 @@ const loadData = async (idCurrentConversation: string) => {
     catch (err) { console.log(err) };
   }
 }
-  onUnmounted(() => {
-    socket.off('newMessage');
-  });
+onUnmounted(() => {
+  socket.off('newMessage');
+});
 </script>
 <style lang="scss" src="./MessagePanel.scss" scoped></style>
