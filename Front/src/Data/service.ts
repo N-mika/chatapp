@@ -87,10 +87,10 @@ export const onDeleteService = async (nameDelete: string, id: string): Promise<"
 };
 
 // LOGIN
-export const loginService = async (email: string, password: string): Promise<User> => {
+export const onAuth = async (email: string, password: string): Promise<{ status: number; data: User }> => {
   try {
-    const response = await axios.post<User>(`${API_BASE_URL}/login`, { email, password });
-    return response.data;
+    const response = await axios.post<User>(`${API_BASE_URL}/auth`, { idUser : email, password });
+    return { status: response.status, data: response.data };
   } catch (error: any) {
     console.error("Erreur lors de la connexion", error);
     throw new Error(error.response?.data?.message || "Erreur de connexion");

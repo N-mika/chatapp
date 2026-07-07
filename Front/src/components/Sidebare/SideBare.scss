@@ -75,6 +75,7 @@
     padding: .5em 1em;
     color: $white;
     box-shadow: .2em .2em .1em $black;
+    gap : 1em;
 
     &:hover {
       background-color: rgba($mostly, .8);

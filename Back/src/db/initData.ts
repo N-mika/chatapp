@@ -33,7 +33,7 @@ const messagesMock: ChatMessage[] = [
 const userMocke : UserModel[] =[
     {
     id: "u1",
-    userName: "Mika",
+    userName: "Mika", 
     surName: "Tieko",
     email: "mika@email.com",
     pseudo: "mika",
@@ -143,9 +143,13 @@ export const initData =  async ()=>{
       console.log('init chatConversation')
     }
     if(!findUser){
-      const hashedpassword = await bcrypt.hash(userMocke[0].password , 10);
-      await UserModel.insertMany(userMocke);
-      console.log("utilisateur annitialiser");
+      const userDefault = userMocke.map(async (user)=> {
+        const hashedpassword = await bcrypt.hash(user.password, 10);
+        return { ...user, password: hashedpassword };
+      });
+      const resolvedUsers = await Promise.all(userDefault);
+      await UserModel.insertMany(resolvedUsers);
+      console.log("utilisateur annitialiser"); 
     }
   }catch(err){
     console.log("Erreur : " , err )

@@ -9,6 +9,11 @@ const UserShema: Schema<UserDocument> = new Schema({
     require: true,
     unique: true,
   },
+  email :{
+    type: String,
+    required: true,
+    unique: true,
+  },
   userName: {
     type: String,
     required: true,
@@ -21,7 +26,7 @@ const UserShema: Schema<UserDocument> = new Schema({
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   roleUser: {
     type: String,

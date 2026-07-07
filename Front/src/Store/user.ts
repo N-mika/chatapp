@@ -1,12 +1,11 @@
 import { defineStore } from "pinia";
-// import { emptyUser } from "../Data/DataEmpty";
 import { User } from "../Data/DataType";
-import { currentUser as currentUserData, users } from "../Data/Data";
 import { ref } from "vue";
+import { emptyUser } from "../Data/DataEmpty";
 
 export const useUserStore = defineStore("user", () => {
-  const currentUser = ref<User>(currentUserData);
-  const allUser = ref<User[]>(users.value);
+  const currentUser = ref<User>(emptyUser);
+  const allUser = ref<User[]>([]);
   const setCurrentUser = (user: User) => {
     currentUser.value = user;
   };
