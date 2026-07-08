@@ -67,15 +67,19 @@
 </template>
 
 <script setup lang="ts">
+//@ts-ignore
+import { v4 as uuid } from 'uuid'
 import { computed, ref } from "vue";
 import { X, Search, Plus, MessageCirclePlus } from "@lucide/vue";
-import { User } from "../Data/DataType";
+import { ChatConversation, ConversationUser, User } from "../Data/DataType";
+import { onAddService } from "../Data/service";
+import { useUserStore } from '../Store/user';
 
 const props = defineProps<{
   modelValue: boolean,
   users: User[]
 }>();
-
+const userStore = useUserStore()
 const emit = defineEmits([
   "update:modelValue",
   "create"
@@ -93,9 +97,19 @@ const close = () => {
 };
 
 const createConversation = () => {
+  let idConversation = uuid();
   if (!selectedUser.value)
     return;
-  emit("create", selectedUser.value);
+  let conversationUser: ConversationUser[] = [
+    { idConversation: idConversation, idUser: selectedUser.value.id, isRead: false },
+    { idConversation: idConversation, idUser: userStore.currentUser.id, isRead: false },
+  ]
+  let chatConversation: ChatConversation = {
+    id: idConversation, userIdConversations: [userStore.currentUser.id, selectedUser.value.id]
+  }
+  // emit("create", selectedUser.value);
+  onAddService('setconversationUser', conversationUser);
+  onAddService('setchatconversation', chatConversation);
   close();
 };
 </script>

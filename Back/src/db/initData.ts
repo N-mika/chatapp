@@ -84,19 +84,16 @@ const chatConversationsMocke: ChatConversation[] = [
   {
     id: "c1",
     name: "Mari",
-    isRead: true,
     userIdConversations: ["u1", "u2"],
   },
   {
     id: "c2",
     name: "Rabe",
-    isRead: false,
     userIdConversations: ["u1", "u3"],
     },
   {
     id: "c3",
     name: "Dev Chat",
-    isRead: true,
     userIdConversations: ["u1", "u3", "u4"],
   },
 ];

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChatMessage, User } from "./DataType";
+import { ChatConversation, ChatMessage, ConversationUser, User } from "./DataType";
 import { API_BASE_URL } from "./api";
 
 // const API = "https://stjude-backend.onrender.com/api";
@@ -8,7 +8,7 @@ import { API_BASE_URL } from "./api";
 // CREATE
 export const onAddService = async (
   nameAdd: string,
-  params: ChatMessage
+  params: ChatMessage | User | ConversationUser[] | ChatConversation
 ): Promise<"success" | "error"> => {
   try {
     const response = await axios.post(`${API_BASE_URL}/${nameAdd.toLowerCase()}`, params);

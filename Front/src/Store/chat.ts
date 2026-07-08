@@ -14,18 +14,24 @@ export const useChatStore = defineStore("chatStore", () => {
   const currentChatMessageUser = ref<ChatMessage[]>([]);
   const currentChatConversation = ref<ChatConversation>(emptyChatConversation);
 
+  const setNewChatConversations = (convs: ChatConversation) => {
+    chatConversations.value.push(convs);
+  };
   const setChatConversations = (convs: ChatConversation[]) => {
     chatConversations.value = convs;
   };
-  const setChatConversationUser = (convUser: ConversationUser[]) => {
+  const setNewConversationUser = (convUser: ConversationUser) => {
+    conversationUser.value.push(convUser);
+  }
+  const setConversationUser = (convUser: ConversationUser[]) => {
     conversationUser.value = convUser;
   };
-  const setCurrentConversation = (currentConversation: ChatConversation ) => {
+  const setCurrentConversation = (currentConversation: ChatConversation) => {
     currentChatConversation.value = currentConversation;
   };
-  const setChatMessage = (currentChatMessage: ChatMessage[] ) => {
+  const setChatMessage = (currentChatMessage: ChatMessage[]) => {
     // there we set service to get message for databases allMessages
-    currentChatMessageUser.value =currentChatMessage;
+    currentChatMessageUser.value = currentChatMessage;
   };
   const newChatMessage = (chatMessageUser: ChatMessage) => {
     currentChatMessageUser.value.push(chatMessageUser);
@@ -38,8 +44,10 @@ export const useChatStore = defineStore("chatStore", () => {
     currentChatConversation,
     setChatConversations,
     setChatMessage,
-    setChatConversationUser,
+    setConversationUser,
     newChatMessage,
     setCurrentConversation,
+    setNewConversationUser,
+    setNewChatConversations
   };
 });

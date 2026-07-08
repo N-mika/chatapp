@@ -1,14 +1,15 @@
 <template>
   <aside class="flex h-screen w-80 flex-col border-r border-gray-200 bg-white">
     <!-- Header -->
+
     <div class="flex items-center justify-between border-b border-gray-100 p-4">
       <div class="flex items-center gap-3">
         <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-white">
-          {{ userStore.currentUser.surName?.charAt(0).toUpperCase() }}
+          {{ userStore.currentUser.userName?.charAt(0).toUpperCase() }}
         </div>
         <div class="overflow-hidden">
           <h2 class="truncate text-sm font-semibold text-gray-800">
-            {{ userStore.currentUser.surName }}
+            {{ userStore.currentUser.userName }}
           </h2>
           <p class="truncate text-xs text-gray-500">
             {{ userStore.currentUser.email }}
@@ -29,10 +30,19 @@
       <RouterLink v-for="conversation in conversationFiltred" :key="conversation.id" :to="`/message/${conversation.id}`"
         class="flex items-center gap-3 rounded-xl p-3 transition hover:bg-gray-100">
         <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white font-semibold">
-          {{ conversation.name.charAt(0).toUpperCase() }}
+          {{ conversation.name?.charAt(0).toLocaleUpperCase() || findUser(
+            userStore.allUser,
+            conversation.userIdConversations,
+            userStore.currentUser.id
+          ).userName.charAt(0).toLocaleUpperCase() }}
         </div>
         <div class="min-w-0 flex-1">
-          <h3 class="truncate font-medium text-gray-800"> {{ conversation.name }}</h3>
+          <h3 class="truncate font-medium text-gray-800">{{
+            conversation.name || findUser(
+              userStore.allUser,
+              conversation.userIdConversations,
+              userStore.currentUser.id
+            ).userName }}</h3>
           <p class="truncate text-sm text-gray-500">
             Cliquez pour ouvrir la conversation
           </p>
@@ -46,7 +56,7 @@
         <PlusCircle :size="20" /> Nouvelle conversation
       </button>
     </div>
-    <NewConversationModal v-model="showNewConversation" :users="userStore.allUser" />
+    <NewConversationModal v-model="showNewConversation" :users="userNewChatConversation" />
   </aside>
 </template>
 
@@ -57,12 +67,22 @@ import { useUserStore } from '../../Store/user';
 import { useAuthStore } from '../../Store/auth';
 import { LogOut, PlusCircle } from '@lucide/vue';
 import NewConversationModal from '../NewConversation.vue';
+import { findUser } from '../../utils/find.ts';
+// import { findUser } from '../../utils/find.ts';
 
 const authStore = useAuthStore();
 const search = ref<string>('');
 const chatStore = useChatStore();
 const userStore = useUserStore();
 const showNewConversation = ref<boolean>(false);
+
+const userNewChatConversation = computed(() =>
+  userStore.allUser.filter(user =>
+    !chatStore.chatConversations.some(conversation =>
+      conversation.userIdConversations.includes(user.id)
+    )
+  )
+);
 
 const onLogout = () => {
   localStorage.removeItem("user");

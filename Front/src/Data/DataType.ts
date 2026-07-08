@@ -14,11 +14,10 @@ export type ChatMessage = {
 };
 export type ChatConversation = {
   id: string;
-  name: string;
-  createdAt: string;
+  name?: string;
+  createdAt?: string;
   updatedAt?: string;
   icon?: string;
-  isRead: boolean;
   userIdConversations: string[]; // IDs of users in the conversation
   lastMessage?: ChatMessage;
 };

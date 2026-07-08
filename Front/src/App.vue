@@ -33,7 +33,7 @@ onMounted(async () => {
     authStore.setAuthenticated(true);
     userStore.setCurrentUser(currentUser);
     chatStore.setChatConversations(chatConversations);
-    chatStore.setChatConversationUser(conversationUser);
+    chatStore.setConversationUser(conversationUser);
   }
 })
 </script>

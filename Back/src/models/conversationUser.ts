@@ -13,10 +13,6 @@ const conversationUserSchema: Schema<ConversationUserDocument> = new Schema(
       type: String,
       required: true,
     },
-    isRead: {
-      type: Boolean,
-      required: true,
-    },
   },
   {
     timestamps: true,

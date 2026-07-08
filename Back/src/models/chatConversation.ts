@@ -11,10 +11,7 @@ const chatConversationSchema: Schema<ChatConversationDocument> = new Schema(
     },
     name: {
       type: String,
-    },
-    isRead: {
-      type: Boolean,
-      required: true,
+      default : '',
     },
     userIdConversations: {
       type: [String],

@@ -2,7 +2,7 @@ import { ChatMessage } from "../db/typedata";
 import { Socket, Server } from "socket.io";
 export default (io: Server) => {
   io.on("connection", (socket: Socket) => {
-    console.log("Socket connectée:", socket.id);
+    // console.log("Socket connectée:", socket.id);
 
     // Un client s'identifie (rejoindre sa room perso)
     socket.on("userConnected", (userId: string) => {
@@ -28,7 +28,7 @@ export default (io: Server) => {
     );
 
     socket.on("disconnect", () => {
-      console.log(`Socket déconnectée: ${socket.id}`);
+      // console.log(`Socket déconnectée: ${socket.id}`);
     });
   });
 };

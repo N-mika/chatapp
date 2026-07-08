@@ -1,15 +1,23 @@
 <template>
   <div v-if="conversation.id !== ''" class="flex flex-1 h-screen flex-col bg-gray-50">
     <!-- Header -->
-    <div  class="flex items-center justify-between border-b border-gray-200 bg-white px-5 py-3 shadow-sm">
+    <div class="flex items-center justify-between border-b border-gray-200 bg-white px-5 py-3 shadow-sm">
       <div class="flex items-center gap-3">
         <!-- Avatar -->
         <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary font-bold text-white">
-          {{ conversation.name?.charAt(0).toUpperCase() }}
+          {{ conversation.name?.charAt(0).toUpperCase() || findUser(
+              userStore.allUser,
+              conversation.userIdConversations,
+              userStore.currentUser.id
+            ).userName.charAt(0).toLocaleUpperCase() }}
         </div>
         <div>
           <h2 class="font-semibold text-gray-800">
-            {{ conversation.name }}
+            {{ conversation.name || findUser(
+              userStore.allUser,
+              conversation.userIdConversations,
+              userStore.currentUser.id
+            ).userName }}
           </h2>
           <div class="flex items-center gap-1 text-xs text-gray-500">
             <span class="h-2 w-2 rounded-full bg-green-500"></span>
@@ -20,21 +28,16 @@
     </div>
     <!-- Messages -->
     <div class="flex-1 overflow-y-auto p-4">
-      <ChatBulle :chatMessage="chatStore.currentChatMessageUser" :current-user="userStore.currentUser"/>
+      <ChatBulle :chatMessage="chatStore.currentChatMessageUser" :current-user="userStore.currentUser" />
     </div>
     <!-- Input -->
     <div class="border-t border-gray-200 bg-white p-3">
-      <Input :currentUser="userStore.currentUser" :conversation="conversation"/>
+      <Input :currentUser="userStore.currentUser" :conversation="conversation" />
     </div>
   </div>
   <!-- Aucun chat sélectionné -->
-  <div
-    v-else
-    class="flex h-screen flex-col items-center justify-center bg-gray-50 text-center"
-  >
-    <div
-      class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-200 text-gray-400"
-    >
+  <div v-else class="flex h-screen flex-col items-center justify-center bg-gray-50 text-center">
+    <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-200 text-gray-400">
       💬
     </div>
     <h2 class="text-lg font-semibold text-gray-700">
@@ -58,6 +61,7 @@ import Input from "../ChatInput.vue";
 import ChatBulle from '../ChatBulle.vue';
 import { onGetByIdService, onGetByIdServiceReturnObjet } from '../../Data/service.ts';
 import { socket } from '../../Socket/socket.ts';
+import { findUser } from '../../utils/find.ts';
 
 const userStore = useUserStore();
 const chatStore = useChatStore();

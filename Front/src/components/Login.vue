@@ -21,9 +21,16 @@
           </div>
         </section>
         <!-- RIGHT -->
-        <section class="flex items-center">
-          <div class="w-full">
-            <div class="bg-white rounded-tr-3xl rounded-br-3xl w-full max-w-md p-8">
+        <section class="flex items-center p-8 lg:p-14 relative">
+          <div class="absolute top-2 left-2">
+            <button v-if="navigate === 'signup'" @click="navigate = 'login'"
+              class="flex items-center gap-2 text-primary font-semibold hover:underline">
+              <ArrowLeftCircle :size="20" />
+              Retour
+            </button>
+          </div>
+          <div v-if="navigate === 'login'" class="w-full">
+            <div class="bg-white rounded-tr-3xl rounded-br-3xl w-full max-w-md">
               <!-- Logo -->
               <div class="flex justify-center mb-5">
                 <div
@@ -58,7 +65,8 @@
                     <Lock class="absolute left-3 top-3.5 text-gray-400" :size="20" />
                     <input :type="showPassword ? 'text' : 'password'" v-model="form.password" placeholder="********"
                       class="w-full rounded-xl border border-gray-300 py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-primary" />
-                    <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-3 text-gray-500 hover:text-primary">
+                    <button type="button" @click="showPassword = !showPassword"
+                      class="absolute right-3 top-3 text-gray-500 hover:text-primary">
                       <EyeOff v-if="showPassword" :size="20" />
                       <Eye v-else :size="20" />
                     </button>
@@ -88,12 +96,15 @@
               </div>
               <p class="text-center text-gray-600">
                 Pas encore de compte ?
-                <RouterLink to="/" class="text-primary font-semibold hover:underline">
+                <button @click="navigate = 'signup'" class="text-primary font-semibold hover:underline">
                   S'inscrire
-                </RouterLink>
+                </button>
+                <!-- <RouterLink to="/" >
+                </RouterLink> -->
               </p>
             </div>
           </div>
+          <SingUp v-if="navigate === 'signup'" @onNavigate="navigate = 'login'"/>
         </section>
       </div>
     </div>
@@ -107,20 +118,15 @@ import { useAuthStore } from "../Store/auth";
 import { useUserStore } from "../Store/user";
 import { useChatStore } from "../Store/chat";
 import { ChatConversation, ConversationUser, User } from "../Data/DataType";
-import {
-  MessageCircle,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  ArrowRight
-} from "@lucide/vue";
+import { MessageCircle, Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeftCircle } from "@lucide/vue";
+import SingUp from "./SingUp.vue";
 
 type FormInput = {
   email: string
   password: string
   remember: boolean
 }
+const navigate = ref<'login' | 'signup'>('login');
 const showPassword = ref<boolean>(false);
 
 const authStore = useAuthStore();
@@ -149,7 +155,7 @@ const login = async () => {
     authStore.setAuthenticated(true);
     userStore.setCurrentUser(currentUser);
     chatStore.setChatConversations(chatConversations);
-    chatStore.setChatConversationUser(conversationUser);
+    chatStore.setConversationUser(conversationUser);
   }
 }
 

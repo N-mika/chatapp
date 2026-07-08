@@ -13,6 +13,7 @@ import {
   getCurrentConversation,
 } from "../controllers/controllers";
 import { auth } from "../controllers/auth";
+import { addUser } from "../controllers/users";
 
 const router = Router();
 // Get router
@@ -28,6 +29,7 @@ router.post("/setchatconversation", setChatConvesation);
 router.post("/setconversationUser", setConversationUser);
 router.post("/sendmessage", sendMessage);
 router.post("/auth", auth);
+router.post("/adduser", addUser);
 
 router.put("/updateconversationUser", updateConversationUser);
 router.put("/updatedconversation", updatedConversation);

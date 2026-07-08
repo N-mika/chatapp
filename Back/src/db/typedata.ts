@@ -20,10 +20,11 @@ export interface ChatMessage {
 
 export interface ChatConversation {
   id: string;
+  userIdConversations: string[]; // IDs of users in the conversation
   name?: string;
-  isRead: boolean;
-  userIdConversations: string[];
   icon?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ConversationUser {
