@@ -11,6 +11,7 @@ import {
   updateConversationUser,
   updatedConversation,
   getCurrentConversation,
+  getLastMessages,
 } from "../controllers/controllers";
 import { auth } from "../controllers/auth";
 import { addUser } from "../controllers/users";
@@ -19,11 +20,12 @@ const router = Router();
 // Get router
 router.get("/getchatconversation/:idUser", getChatConvesation);
 router.get("/getchatMessage/:conversationId", getMessages);
-router.get("/getconversationusers", getAllConversationUsers);
+router.get("/getconversationusers/:idUser", getAllConversationUsers);
 router.get("/getconversationuser/:idUser/:idConversation", getConversationUser);
 router.get("/getusers", getAllUser);
 router.get("/getconversationusers", getAllConversationUsers);
 router.get("/getcurrentconversation/:conversationId", getCurrentConversation);
+router.get('/getlastmessages', getLastMessages)
 
 router.post("/setchatconversation", setChatConvesation);
 router.post("/setconversationUser", setConversationUser);

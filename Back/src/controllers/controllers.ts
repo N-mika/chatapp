@@ -240,6 +240,7 @@ export const getAllConversationUsers = async (
   res: Response,
 ) => {
   const { idUser } = req.params;
+  console.log(idUser)
 
   try {
     const conversationUsers = await ConversationUsers.find({
@@ -281,6 +282,42 @@ export const getConversationUser = async (
   }
 };
 
+export const getLastMessages = async (
+  req: Request<{}, {}, { conversationIds: string[] }>,
+  res: Response,
+) => {
+  const { conversationIds } = req.body;
+
+  try {
+    const messages = await ChatMessageModel.aggregate([
+      {
+        $match: {
+          conversationId: { $in: conversationIds },
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+      {
+        $group: {
+          _id: "$conversationId",
+          message: {
+            $first: "$$ROOT",
+          },
+        },
+      },
+    ]);
+
+    return res.status(200).json(messages);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: "Erreur serveur",
+    });
+  }
+};
 
 export const updateConversationUser = async (
   req: Request<{}, {}, ConversationUser>,

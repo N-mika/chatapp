@@ -3,6 +3,7 @@ export type Participant = {
 };
 
 export type UserRole = "admin" | "user";
+// le message que l'utilisateeur envoy
 export type ChatMessage = {
   id: string;
   conversationId: string;
@@ -12,6 +13,7 @@ export type ChatMessage = {
   createdAt?: string;
   updatedAt?: string;
 };
+// Le converstion afficher sur le sidebar
 export type ChatConversation = {
   id: string;
   name?: string;
@@ -21,7 +23,7 @@ export type ChatConversation = {
   userIdConversations: string[]; // IDs of users in the conversation
   lastMessage?: ChatMessage;
 };
-// Pour les conversations lu et non lu
+// Pour les conversations lu et non lu Seulement pour une utilisateur
 export type ConversationUser = {
   idConversation: string;
   idUser: string;

@@ -113,13 +113,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { onAuth, onGetByIdService, onGetService } from "../Data/service";
-import { useAuthStore } from "../Store/auth";
-import { useUserStore } from "../Store/user";
-import { useChatStore } from "../Store/chat";
-import { ChatConversation, ConversationUser, User } from "../Data/DataType";
+import { onAuth } from "../Data/service";
+import { User } from "../Data/DataType";
 import { MessageCircle, Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeftCircle } from "@lucide/vue";
 import SingUp from "./SingUp.vue";
+import { initializeDataUser } from "../Data/initialDataUser.ts";
 
 type FormInput = {
   email: string
@@ -128,10 +126,6 @@ type FormInput = {
 }
 const navigate = ref<'login' | 'signup'>('login');
 const showPassword = ref<boolean>(false);
-
-const authStore = useAuthStore();
-const userStore = useUserStore();
-const chatStore = useChatStore();
 
 const form = ref<FormInput>({
   email: "",
@@ -143,20 +137,14 @@ const emit = defineEmits<{
 }>()
 const login = async () => {
   const response = await onAuth(form.value.email, form.value.password);
-  if (response.status === 200) {
-    const currentUser = response.data as User;
-    localStorage.setItem("user", JSON.stringify(currentUser));
 
-    const allUsers = await onGetService<User>('getusers');
-    const chatConversations = await onGetByIdService<ChatConversation>('getchatconversation', currentUser.id);
-    const conversationUser = await onGetByIdService<ConversationUser>('getconversationuser', currentUser.id, chatStore.currentChatConversation.id);
+  if (response.status !== 200) return;
 
-    userStore.setAllUser(allUsers);
-    authStore.setAuthenticated(true);
-    userStore.setCurrentUser(currentUser);
-    chatStore.setChatConversations(chatConversations);
-    chatStore.setConversationUser(conversationUser);
-  }
-}
+  const currentUser = response.data as User;
+
+  localStorage.setItem("user", JSON.stringify(currentUser));
+
+  await initializeDataUser(currentUser);
+};
 
 </script>

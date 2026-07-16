@@ -9,6 +9,7 @@ import { ref } from "vue";
 import { emptyChatConversation } from "../Data/DataEmpty";
 
 export const useChatStore = defineStore("chatStore", () => {
+  const allChatMessage = ref<ChatMessage[]>([]);
   const chatConversations = ref<ChatConversation[]>([]);
   const conversationUser = ref<ConversationUser[]>([]);
   const currentChatMessageUser = ref<ChatMessage[]>([]);
@@ -33,8 +34,12 @@ export const useChatStore = defineStore("chatStore", () => {
     // there we set service to get message for databases allMessages
     currentChatMessageUser.value = currentChatMessage;
   };
+  const setAllChatMessage = (allChatMessages : ChatMessage[])=>{
+    allChatMessage.value = allChatMessages
+  }
   const newChatMessage = (chatMessageUser: ChatMessage) => {
     currentChatMessageUser.value.push(chatMessageUser);
+    allChatMessage.value.push(chatMessageUser);
   };
 
   return {
@@ -42,12 +47,14 @@ export const useChatStore = defineStore("chatStore", () => {
     currentChatMessageUser,
     conversationUser,
     currentChatConversation,
+    allChatMessage,
     setChatConversations,
     setChatMessage,
     setConversationUser,
     newChatMessage,
     setCurrentConversation,
     setNewConversationUser,
-    setNewChatConversations
+    setNewChatConversations,
+    setAllChatMessage
   };
 });

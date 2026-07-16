@@ -16,7 +16,7 @@ const chatSchema: Schema<ChatMessageDocument> = new Schema(
     },
     content: {
       type: String,
-      default: "",
+      required : true,
     },
     senderId: {
       type: String,

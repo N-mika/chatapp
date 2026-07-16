@@ -36,15 +36,14 @@ const onSend = async () => {
     content: text.value,
     conversationId: props.conversation.id,
     id: uuid(),
-    senderId: props.currentUser.id
+    senderId: props.currentUser.id,
+    createdAt : new Date().toISOString()
   }
   try {
-    const response = await onAddService(
-      'sendMessage',
-      newChatMessage
-    );
+    const response = await onAddService('sendMessage',newChatMessage);
     if (response === 'success') {
       chatStore.newChatMessage(newChatMessage);
+      console.log(newChatMessage);
       socket.emit('sendMessage', {
         newChatMessage,
         receiverId: ''

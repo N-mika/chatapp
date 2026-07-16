@@ -1,19 +1,19 @@
 export interface User {
-  id : string;
-  userName : string;
-  surName : string;
-  email : string;
-  pseudo : string;
-  password : string;
-  roleUser : string;
-  tel : string;
-  status : boolean;
-  avatar : string;
+  id: string;
+  userName: string;
+  surName: string;
+  email: string;
+  pseudo: string;
+  password: string;
+  roleUser: string;
+  tel: string;
+  status: boolean;
+  avatar: string;
 }
 export interface ChatMessage {
   id: string;
-  conversationId?: string | null;
-  content?: string;
+  conversationId: string;
+  content: string;
   senderId: string;
   file?: string | null;
 }
