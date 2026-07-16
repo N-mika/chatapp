@@ -1,12 +1,13 @@
 <template>
   <form @submit.prevent="onSend" class="flex items-end gap-2 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm">
-    <textarea id="message" v-model="text" @keydown.enter.exact.prevent="onSend" rows="1"
-      class="max-h-32 flex-1 resize-none rounded-xl bg-gray-50 p-3 text-gray-700 outline-none transition focus:bg-white focus:ring-2 focus:ring-primary"
-      placeholder="Écrivez votre message...">
-    </textarea>
-    <button type="submit" :disabled="!text.trim()"
+    <textarea v-model="text" :disabled="isSending" @keydown.enter.exact.prevent="onSend" rows="1"
+      class="max-h-32 flex-1 resize-none rounded-xl bg-gray-50 p-3 text-gray-700 outline-none transition focus:bg-white focus:ring-2 focus:ring-primary disabled:opacity-60"
+      placeholder="Écrivez votre message..." />
+
+    <button type="submit" :disabled="!text.trim() || isSending"
       class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white transition hover:scale-105 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50">
-      <Send :size="20" />
+      <Send v-if="!isSending" :size="20" />
+      <LoaderCircle v-if="isSending" :size="20" class="animate-spin" />
     </button>
   </form>
 </template>
@@ -15,7 +16,7 @@
 //@ts-ignore
 import { v4 as uuid } from 'uuid'
 import { ref } from 'vue';
-import { Send } from '@lucide/vue';
+import { LoaderCircle, Send } from '@lucide/vue';
 
 import { ChatConversation, ChatMessage, User } from '../Data/DataType';
 import { useChatStore } from '../Store/chat';
@@ -29,30 +30,40 @@ const props = defineProps<{
 
 const chatStore = useChatStore();
 const text = ref<string>('');
+const isSending = ref(false);
 
 const onSend = async () => {
-  if (!text.value.trim()) return;
+  if (!text.value.trim() || isSending.value) return;
+
+  isSending.value = true;
+
+  const message = text.value.trim();
+
   const newChatMessage: ChatMessage = {
-    content: text.value,
+    content: message,
     conversationId: props.conversation.id,
     id: uuid(),
     senderId: props.currentUser.id,
-    createdAt : new Date().toISOString()
-  }
+    createdAt: new Date().toISOString(),
+  };
+
   try {
-    const response = await onAddService('sendMessage',newChatMessage);
-    if (response === 'success') {
+    const response = await onAddService("sendMessage", newChatMessage);
+
+    if (response === "success") {
       chatStore.newChatMessage(newChatMessage);
-      console.log(newChatMessage);
-      socket.emit('sendMessage', {
+
+      socket.emit("sendMessage", {
         newChatMessage,
-        receiverId: ''
+        receiverId: "",
       });
+
+      text.value = "";
     }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    isSending.value = false;
   }
-  catch (err) {
-    console.log(err)
-  }
-  text.value = '';
-}
+};
 </script>

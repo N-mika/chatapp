@@ -1,6 +1,7 @@
 <template>
   <div class="flex gap-0.5 h-screen w-full">
-    <Login v-if="!authStore.isAuthenticated" />
+    <LoadingPage v-if="authStore.isLoading"/>
+    <Login v-else-if="!authStore.isAuthenticated" />
     <div v-else class="flex gap-0.5 flex-1">
       <SideBare />
       <router-view></router-view>
@@ -10,20 +11,24 @@
 <script setup lang="ts">
 import SideBare from './components/Sidebare/SideBare.vue';
 import { onMounted } from 'vue';
-import type { User } from './Data/DataType';
 import Login from './components/Login.vue';
 import { useAuthStore } from './Store/auth.ts';
 import { initializeDataUser } from './Data/initialDataUser.ts';
+import LoadingPage from './components/LoadingPage.vue';
 
 const authStore = useAuthStore();
 
 onMounted(async () => {
-  const user = localStorage.getItem("user");
+  authStore.setLoading(true);
+  try {
+    const user = localStorage.getItem("user");
 
-  if (!user) return;
+    if (user) {
+      await initializeDataUser(JSON.parse(user));
+    }
+  } finally {
+    authStore.setLoading(false);
+  }
 
-  const currentUser: User = JSON.parse(user);
-
-  await initializeDataUser(currentUser);
 });
 </script>

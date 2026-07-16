@@ -6,10 +6,10 @@
         <!-- Avatar -->
         <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary font-bold text-white">
           {{ conversation.name?.charAt(0).toUpperCase() || findUser(
-              userStore.allUser,
-              conversation.userIdConversations,
-              userStore.currentUser.id
-            ).userName.charAt(0).toLocaleUpperCase() }}
+            userStore.allUser,
+            conversation.userIdConversations,
+            userStore.currentUser.id
+          ).userName.charAt(0).toLocaleUpperCase() }}
         </div>
         <div>
           <h2 class="font-semibold text-gray-800">
@@ -35,18 +35,7 @@
       <Input :currentUser="userStore.currentUser" :conversation="conversation" />
     </div>
   </div>
-  <!-- Aucun chat sélectionné -->
-  <div v-else class="flex h-screen flex-col items-center justify-center bg-gray-50 text-center">
-    <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-200 text-gray-400">
-      💬
-    </div>
-    <h2 class="text-lg font-semibold text-gray-700">
-      Veuillez sélectionner une conversation
-    </h2>
-    <p class="mt-2 text-sm text-gray-500">
-      Choisissez une discussion dans la liste pour commencer à échanger.
-    </p>
-  </div>
+
 </template>
 <script lang="ts" setup>
 //@ts-ignore
@@ -59,7 +48,6 @@ import { useUserStore } from '../../Store/user';
 import { useChatStore } from '../../Store/chat';
 import Input from "../ChatInput.vue";
 import ChatBulle from '../ChatBulle.vue';
-import { onGetByIdService, onGetByIdServiceReturnObjet } from '../../Data/service.ts';
 import { socket } from '../../Socket/socket.ts';
 import { findUser } from '../../utils/find.ts';
 
@@ -88,11 +76,12 @@ const loadData = async (idCurrentConversation: string) => {
       chatStore.newChatMessage(newChatMessage);
     });
     try {
-      const currentChatMessage = await onGetByIdService<ChatMessage>('getchatmessage', idCurrentConversation as string);
-      const currentChatConversation = await onGetByIdServiceReturnObjet<ChatConversation>('getcurrentconversation', idCurrentConversation as string);
-      chatStore.setCurrentConversation(currentChatConversation);
-      console.log(chatStore.currentChatConversation, idCurrentConversation);
-      chatStore.setChatMessage(currentChatMessage);
+      const currentChatMessage = chatStore.allChatMessage.filter(({conversationId})=> idCurrentConversation === conversationId )
+      const currentChatConversation = chatStore.chatConversations.find(({id})=> id === idCurrentConversation);
+      if(currentChatConversation){
+        chatStore.setCurrentConversation(currentChatConversation);
+        chatStore.setChatMessage(currentChatMessage);
+      }
       conversation.value = chatStore.currentChatConversation;
     }
     catch (err) { console.log(err) };

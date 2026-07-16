@@ -12,7 +12,7 @@ export default (io: Server) => {
 
     socket.on("joinConversation", (conversationId: string) => {
       socket.join(conversationId);
-      console.log(`Socket ${socket.id} a rejoint conversation ${conversationId}`);
+      // console.log(`Socket ${socket.id} a rejoint conversation ${conversationId}`);
     });
 
     socket.on(

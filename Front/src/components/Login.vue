@@ -1,27 +1,71 @@
 <template>
   <div class=" flex-1 bg-white flex items-center justify-center p-5">
+
     <div class="max-w-7xl bg-white rounded-3xl shadow-2xl overflow-hidden">
       <div class="grid lg:grid-cols-2">
-        <section class="hidden lg:flex bg-primary text-white p-14 flex-col justify-between">
-          <div>
-            <div class="w-20 h-20 rounded-3xl bg-white/20 flex items-center justify-center text-4xl">
-              <MessageCircle :size="42" />
+        <section class="hidden p-14 lg:flex flex-col justify-between bg-primary text-white">
+          <div class="flex flex-col gap-10">
+            <!-- En-tête -->
+            <div class="flex flex-col gap-6">
+              <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/20">
+                <MessageCircle :size="42" />
+              </div>
+
+              <div class="flex flex-col gap-3">
+                <h1 class="text-5xl font-bold">
+                  Chat App
+                </h1>
+
+                <p class="text-lg leading-8 text-white/90">
+                  Une application Full Stack conçue pour démontrer mes compétences en
+                  développement web moderne et en communication temps réel.
+                </p>
+              </div>
             </div>
-            <h1 class="text-5xl font-bold mt-10">Chat App</h1>
-            <p class="mt-6 text-lg text-white/90 leading-8">
-              Communiquez instantanément avec vos collègues, vos amis ou votre équipe grâce à une plateforme rapide,
-              sécurisée et moderne.
-            </p>
-          </div>
-          <div>
-            <!-- <img
-            src="/chat.svg"
-            class="w-full"
-          > -->
+
+            <!-- Compétences -->
+            <div class="flex flex-col gap-4 text-white/90">
+              <div class="flex items-center gap-3">
+                <span>
+                  <CircleCheck :size="18" class="text-white" />
+                </span>
+                <span>Vue 3 + TypeScript + Composition API</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <CircleCheck :size="18" class="text-white" />
+                <span>Pinia pour la gestion d'état</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <CircleCheck :size="18" class="text-white" />
+                <span>Tailwind CSS & interface responsive</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <CircleCheck :size="18" class="text-white" />
+                <span>Node.js + Express + MongoDB</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <CircleCheck :size="18" class="text-white" />
+                <span>Socket.IO pour la messagerie en temps réel</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <CircleCheck :size="18" class="text-white" />
+                <span>Authentification sécurisée</span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <CircleCheck :size="18" class="text-white" />
+                <span>Déploiement Frontend & Backend</span>
+              </div>
+            </div>
           </div>
         </section>
         <!-- RIGHT -->
-        <section class="flex items-center p-8 lg:p-14 relative">
+        <section class="flex items-center p-14 lg:p-14 relative">
           <div class="absolute top-2 left-2">
             <button v-if="navigate === 'signup'" @click="navigate = 'login'"
               class="flex items-center gap-2 text-primary font-semibold hover:underline">
@@ -86,7 +130,8 @@
                 <button
                   class="group flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-white transition-all hover:bg-primary/90 hover:scale-[1.02]">
                   Se connecter
-                  <ArrowRight class="transition-transform group-hover:translate-x-1" :size="20" />
+                  <ArrowRight v-if="!isLoading " class="transition-transform group-hover:translate-x-1" :size="20" />
+                  <LoaderCircle v-else :size="20" class="animate-spin" />
                 </button>
               </form>
               <div class="my-7 flex items-center">
@@ -104,7 +149,7 @@
               </p>
             </div>
           </div>
-          <SingUp v-if="navigate === 'signup'" @onNavigate="navigate = 'login'"/>
+          <SingUp v-if="navigate === 'signup'" @onNavigate="navigate = 'login'" />
         </section>
       </div>
     </div>
@@ -115,7 +160,7 @@
 import { ref } from "vue"
 import { onAuth } from "../Data/service";
 import { User } from "../Data/DataType";
-import { MessageCircle, Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeftCircle } from "@lucide/vue";
+import { MessageCircle, Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeftCircle, CircleCheck, LoaderCircle } from "@lucide/vue";
 import SingUp from "./SingUp.vue";
 import { initializeDataUser } from "../Data/initialDataUser.ts";
 
@@ -124,9 +169,10 @@ type FormInput = {
   password: string
   remember: boolean
 }
+
 const navigate = ref<'login' | 'signup'>('login');
 const showPassword = ref<boolean>(false);
-
+const isLoading = ref<boolean>(false);
 const form = ref<FormInput>({
   email: "",
   password: "",
@@ -136,15 +182,24 @@ const emit = defineEmits<{
   (e: 'login', form: FormInput): void
 }>()
 const login = async () => {
-  const response = await onAuth(form.value.email, form.value.password);
+  try {
+    isLoading.value = true
+    const response = await onAuth(form.value.email, form.value.password);
 
-  if (response.status !== 200) return;
+    if (response.status !== 200) return;
 
-  const currentUser = response.data as User;
+    const currentUser = response.data as User;
 
-  localStorage.setItem("user", JSON.stringify(currentUser));
+    localStorage.setItem("user", JSON.stringify(currentUser));
 
-  await initializeDataUser(currentUser);
+    await initializeDataUser(currentUser);
+  } catch {
+
+  }
+  finally {
+    isLoading.value = false
+  }
+
 };
 
 </script>

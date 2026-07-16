@@ -240,7 +240,7 @@ export const getAllConversationUsers = async (
   res: Response,
 ) => {
   const { idUser } = req.params;
-  console.log(idUser)
+  // console.log(idUser)
 
   try {
     const conversationUsers = await ConversationUsers.find({
