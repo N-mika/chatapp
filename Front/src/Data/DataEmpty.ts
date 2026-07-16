@@ -55,7 +55,6 @@ export const emptyChatConversation: ChatConversation = {
   createdAt: "",
   updatedAt: "",
   icon: "",
-  isRead: false,
   userIdConversations: [],
   lastMessage: undefined,
 };
